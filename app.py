@@ -129,21 +129,20 @@ def home():
 
 @app.route("/table")
 def table():
-    try:
-        if "username" not in session:
-            flash("Please log in first")
-            return render_template("login.html")
 
-        # Set the pagination configuration
-        page = request.args.get('page', 1, type=int)
-        member = Members.query.paginate(page=page, per_page=9)
-        total_rows = Members.query.count()
-        button_name = "Show All Records"
-        path = "/table1"
+    if "username" not in session:
+        flash("Please log in first")
+        return render_template("login.html")
 
-        return render_template("table.html", member=member, total_rows=total_rows, button_name=button_name, path=path)
-    except:
-        return make_response("can't access the table page")
+    # Set the pagination configuration
+    page = request.args.get('page', 1, type=int)
+    member = Members.query.paginate(page=page, per_page=9)
+    total_rows = Members.query.count()
+    button_name = "Show All Records"
+    path = "/table1"
+
+    return render_template("table.html", member=member, total_rows=total_rows, button_name=button_name, path=path)
+
 
 
 @app.route("/table1")
@@ -167,44 +166,42 @@ def table1():
 
 @app.route("/form", methods=['POST', 'GET'])
 def form():
-    try:
-        if "username" not in session:
-            flash("Please log in first")
-            return render_template("login.html")
 
-        if request.method == 'POST':
-            'add entry to db'
+    if "username" not in session:
+        flash("Please log in first")
+        return render_template("login.html")
 
-            id = request.form.get('id')
-            firstname = request.form.get('firstname').strip()
-            lastname = request.form.get('lastname').strip()
-            phoneno = request.form.get('phoneno').strip()
-            email = request.form.get('email').strip()
+    if request.method == 'POST':
+        'add entry to db'
 
-            # dates
-            joindate = request.form.get('joindate')
-            startdate = request.form.get('startdate')
-            enddate = request.form.get('enddate')
+        id = request.form.get('id')
+        firstname = request.form.get('firstname').strip()
+        lastname = request.form.get('lastname').strip()
+        phoneno = request.form.get('phoneno').strip()
+        email = request.form.get('email').strip()
 
-            address = request.form.get('address').strip()
-            status = request.form.get('status')
-            training = request.form.get('training')
-            amount = request.form.get('amount').strip()
+        # dates
+        joindate = request.form.get('joindate')
+        startdate = request.form.get('startdate')
+        enddate = request.form.get('enddate')
 
-            entry = Members(id=id, firstname=firstname, lastname=lastname, phoneno=phoneno, email=email,
-                            joindate=joindate, startdate=startdate, enddate=enddate, address=address, status=status,
-                            training=training, amount=amount)
-            # entry=Members(id=id,firstname=firstname,lastname=lastname,phoneno=phoneno,email=email,
-            #               joindate=joindate)
-            db.session.add(entry)
-            db.session.commit()
-            flash(" Member Inserted Successfully ")
+        address = request.form.get('address').strip()
+        status = request.form.get('status')
+        training = request.form.get('training')
+        amount = request.form.get('amount').strip()
 
-        member = Members.query.all()
-        return render_template("form.html", member=member[-1])
-    except:
-        # flash("Id is already present")
-        return make_response("something went wrong!")
+        entry = Members(id=id, firstname=firstname, lastname=lastname, phoneno=phoneno, email=email,
+                        joindate=joindate, startdate=startdate, enddate=enddate, address=address, status=status,
+                        training=training, amount=amount)
+        # entry=Members(id=id,firstname=firstname,lastname=lastname,phoneno=phoneno,email=email,
+        #               joindate=joindate)
+        db.session.add(entry)
+        db.session.commit()
+        flash(" Member Inserted Successfully ")
+
+    member = Members.query.all()
+    return render_template("form.html", member=member[-1])
+
 
 
 @app.route("/edit/<int:id>/", methods=['GET', 'POST'])
@@ -254,82 +251,79 @@ def edit(id):
 
 @app.route("/delete/<int:id>/", methods=['GET', 'POST'])
 def delete(id):
-    try:
-        if "username" not in session:
-            flash("Please log in first")
-            return render_template("login.html")
 
-        my_data = Members.query.get(id)
-        db.session.delete(my_data)
-        db.session.commit()
-        flash("Member Deleted Successfully")
+    if "username" not in session:
+        flash("Please log in first")
+        return render_template("login.html")
 
-        return redirect(url_for('table'))
-    except:
-        return make_response("Something went wrong. Contact Developer!")
+    my_data = Members.query.get(id)
+    db.session.delete(my_data)
+    db.session.commit()
+    flash("Member Deleted Successfully")
+
+    return redirect(url_for('table'))
+
 
 
 @app.route("/expiryTable")
 def expiry_table():
-    try:
-        if "username" not in session:
-            flash("Please log in first")
-            return render_template("login.html")
-        today = datetime.datetime.now().date()
-        expire = today + datetime.timedelta(days=2)
-        # member = Members.query.filter(Members.enddate <= expire).all()
-        total_rows = Members.query.filter(Members.enddate <= expire).count()
-        member = Members.query.filter(Members.enddate <= expire).order_by(Members.enddate.desc()).all()
-        return render_template('expiryTable.html', member=member, total_rows=total_rows)
-    except:
-        return make_response("Something went wrong. Contact Developer!")
+
+    if "username" not in session:
+        flash("Please log in first")
+        return render_template("login.html")
+    today = datetime.datetime.now().date()
+    expire = today + datetime.timedelta(days=2)
+    # member = Members.query.filter(Members.enddate <= expire).all()
+    total_rows = Members.query.filter(Members.enddate <= expire).count()
+    member = Members.query.filter(Members.enddate <= expire).order_by(Members.enddate.desc()).all()
+    return render_template('expiryTable.html', member=member, total_rows=total_rows)
+
 
 
 @app.route("/editExpiry/<int:id>/", methods=['GET', 'POST'])
 def edit_expiry(id):
-    try:
-        if "username" not in session:
-            flash("Please log in first")
-            return render_template("login.html")
 
-        entry = Members.query.filter_by(id=id).first()
-        if request.method == 'POST':
-            if entry:
-                'delete the previous member entry without id'
-                db.session.delete(entry)
-                db.session.commit()
+    if "username" not in session:
+        flash("Please log in first")
+        return render_template("login.html")
 
-                'updating the whole record'
-                id = request.form.get('id')
-                firstname = request.form.get('firstname').strip()
-                lastname = request.form.get('lastname').strip()
-                phoneno = request.form.get('phoneno').strip()
-                email = request.form.get('email').strip()
-                joindate = request.form.get('joindate')
-                startdate = request.form.get('startdate')
-                enddate = request.form.get('enddate')
-                address = request.form.get('address').strip()
-                status = request.form.get('status')
-                training = request.form.get('training')
-                amount = request.form.get('amount').strip()
+    entry = Members.query.filter_by(id=id).first()
+    if request.method == 'POST':
+        if entry:
+            'delete the previous member entry without id'
+            db.session.delete(entry)
+            db.session.commit()
 
-                entry = Members(id=id, firstname=firstname, lastname=lastname, phoneno=phoneno, email=email,
-                                joindate=joindate, startdate=startdate, enddate=enddate, address=address, status=status,
-                                training=training, amount=amount)
+            'updating the whole record'
+            id = request.form.get('id')
+            firstname = request.form.get('firstname').strip()
+            lastname = request.form.get('lastname').strip()
+            phoneno = request.form.get('phoneno').strip()
+            email = request.form.get('email').strip()
+            joindate = request.form.get('joindate')
+            startdate = request.form.get('startdate')
+            enddate = request.form.get('enddate')
+            address = request.form.get('address').strip()
+            status = request.form.get('status')
+            training = request.form.get('training')
+            amount = request.form.get('amount').strip()
+
+            entry = Members(id=id, firstname=firstname, lastname=lastname, phoneno=phoneno, email=email,
+                            joindate=joindate, startdate=startdate, enddate=enddate, address=address, status=status,
+                            training=training, amount=amount)
 
 
 
-                db.session.add(entry)
-                db.session.commit()
+            db.session.add(entry)
+            db.session.commit()
 
-                flash("Member Updated Successfully")
+            flash("Member Updated Successfully")
 
-                return redirect(url_for('expiry_table'))
-            return "Id does not exist"
+            return redirect(url_for('expiry_table'))
+        return "Id does not exist"
 
-        return render_template("update.html", entry=entry, path="editExpiry", back="expiryTable")
-    except:
-        return make_response("Enter a Unique Id")
+    return render_template("update.html", entry=entry, path="editExpiry", back="expiryTable")
+
 
 
 if __name__ == "__main__":
