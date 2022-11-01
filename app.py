@@ -274,8 +274,7 @@ def expiry_table():
     today = datetime.datetime.now().date()
     expire = today + datetime.timedelta(days=2)
     # member = Members.query.filter(Members.enddate <= expire).all()
-    d=Members.enddate
-    total_rows = Members.query.filter(datetime.date(int(d[0:4]),int(d[5:7]),int(d[8:]))<= expire).count()
+    total_rows = Members.query.filter(Members.enddate <= str(expire)).count()
     member = Members.query.filter(Members.enddate <= expire).order_by(Members.enddate.desc()).all()
     return render_template('expiryTable.html', member=member, total_rows=total_rows)
 
