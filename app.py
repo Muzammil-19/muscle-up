@@ -136,7 +136,7 @@ def table():
 
     # Set the pagination configuration
     page = request.args.get('page', 1, type=int)
-    member = Members.query.order_by(Members.id).paginate(page=page, per_page=total_rows)
+    member = Members.query.order_by(Members.id).paginate(page=page, per_page=9)
     total_rows = Members.query.count()
     button_name = "Show All Records"
     path = "/table1"
