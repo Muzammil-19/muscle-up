@@ -6,7 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 
 app.secret_key = "Secret Key"
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///muscle_up.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgres://pvyjcmwrytnrho:bd8af00d8230687db210eeb7cc6dde5333d66d7c0817c447e78a0701e32d8530@ec2-23-20-140-229.compute-1.amazonaws.com:5432/d1cdo565mmcu59"
 app.config['SQLALCHEMY_TRACK-MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
