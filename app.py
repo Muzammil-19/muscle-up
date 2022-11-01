@@ -155,7 +155,7 @@ def table1():
         total_rows = Members.query.count()
         # Set the pagination configuration
         page = request.args.get('page', 1, type=int)
-        member = Members.queryorder_by(Members.id).paginate(page=page, per_page=total_rows)
+        member = Members.query.order_by(Members.id).paginate(page=page, per_page=total_rows)
         button_name = "Show Less Records"
         path = "/table"
 
