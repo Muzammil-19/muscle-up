@@ -49,31 +49,52 @@ def register():
     return render_template('register.html')
 
 
+# @app.route('/login', methods=['POST', 'GET'])
+# def login():
+#     try:
+#         if "username" in session:
+#             # flash("You have already logged in")
+#             return redirect('/')
+#         else:
+#             if request.method == "POST":
+#                 username = request.form['username'].strip()
+#                 password = request.form['password'].strip()
+#                 data = Users.query.filter_by(username=username).first()
+#                 if username == "admin" and password == "admin":
+#                     session["username"] = "admin"
+#                     return redirect("/")
+#                 elif username == data.username and password == data.password:
+#                     session["username"] = data.username
+#                     return redirect("/")
+#                 else:
+#                     flash("invalid username/password")
+#                     return redirect("/login")
+#     except:
+#         flash("invalid username/password")
+#         return redirect("/login")
+#     return render_template("login.html")
+
+
 @app.route('/login', methods=['POST', 'GET'])
 def login():
-    try:
-        if "username" in session:
-            # flash("You have already logged in")
-            return redirect('/')
-        else:
-            if request.method == "POST":
-                username = request.form['username'].strip()
-                password = request.form['password'].strip()
-                data = Users.query.filter_by(username=username).first()
-                if username == "admin" and password == "admin":
-                    session["username"] = "admin"
-                    return redirect("/")
-                elif username == data.username and password == data.password:
-                    session["username"] = data.username
-                    return redirect("/")
-                else:
-                    flash("invalid username/password")
-                    return redirect("/login")
-    except:
-        flash("invalid username/password")
-        return redirect("/login")
+    if "username" in session:
+        # flash("You have already logged in")
+        return redirect('/')
+    else:
+        if request.method == "POST":
+            username = request.form['username'].strip()
+            password = request.form['password'].strip()
+            data = Users.query.filter_by(username=username).first()
+            if username == "admin" and password == "admin":
+                session["username"] = "admin"
+                return redirect("/")
+            elif username == data.username and password == data.password:
+                session["username"] = data.username
+                return redirect("/")
+            else:
+                flash("invalid username/password")
+                return redirect("/login")
     return render_template("login.html")
-
 
 @app.route('/logout')
 def logout():
