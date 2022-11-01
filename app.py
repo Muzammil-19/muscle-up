@@ -209,48 +209,47 @@ def form():
 
 @app.route("/edit/<int:id>/", methods=['GET', 'POST'])
 def edit(id):
-    try:
-        if "username" not in session:
-            flash("Please log in first")
-            return render_template("login.html")
 
-        entry = Members.query.filter_by(id=id).first()
-        if request.method == 'POST':
-            if entry:
-                'delete the previous member entry without id'
-                db.session.delete(entry)
-                db.session.commit()
+    if "username" not in session:
+        flash("Please log in first")
+        return render_template("login.html")
 
-                'updating the whole record'
-                id = request.form.get('id')
-                firstname = request.form.get('firstname').strip()
-                lastname = request.form.get('lastname').strip()
-                phoneno = request.form.get('phoneno').strip()
-                email = request.form.get('email').strip()
-                joindate = request.form.get('joindate')
-                startdate = request.form.get('startdate')
-                enddate = request.form.get('enddate')
-                address = request.form.get('address').strip()
-                status = request.form.get('status')
-                training = request.form.get('training')
-                amount = request.form.get('amount').strip()
+    entry = Members.query.filter_by(id=id).first()
+    if request.method == 'POST':
+        if entry:
+            'delete the previous member entry without id'
+            db.session.delete(entry)
+            db.session.commit()
 
-                entry = Members(id=id, firstname=firstname, lastname=lastname, phoneno=phoneno, email=email,
-                                joindate=joindate, startdate=startdate, enddate=enddate, address=address, status=status,
-                                training=training, amount=amount)
+            'updating the whole record'
+            id = request.form.get('id')
+            firstname = request.form.get('firstname').strip()
+            lastname = request.form.get('lastname').strip()
+            phoneno = request.form.get('phoneno').strip()
+            email = request.form.get('email').strip()
+            joindate = request.form.get('joindate')
+            startdate = request.form.get('startdate')
+            enddate = request.form.get('enddate')
+            address = request.form.get('address').strip()
+            status = request.form.get('status')
+            training = request.form.get('training')
+            amount = request.form.get('amount').strip()
+
+            entry = Members(id=id, firstname=firstname, lastname=lastname, phoneno=phoneno, email=email,
+                            joindate=joindate, startdate=startdate, enddate=enddate, address=address, status=status,
+                            training=training, amount=amount)
 
 
-                db.session.add(entry)
-                db.session.commit()
+            db.session.add(entry)
+            db.session.commit()
 
-                flash("Member Updated Successfully")
-                # member = Members.query.all()
-                return redirect(url_for('table'))
-            return "Id does not exist"
+            flash("Member Updated Successfully")
+            # member = Members.query.all()
+            return redirect(url_for('table'))
+        return "Id does not exist"
 
-        return render_template("update.html", entry=entry, path="edit", back="table")
-    except:
-        return make_response("Enter a Unique Id")
+    return render_template("update.html", entry=entry, path="edit", back="table")
+
 
 
 @app.route("/delete/<int:id>/", methods=['GET', 'POST'])
