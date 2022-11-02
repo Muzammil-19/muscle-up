@@ -6,7 +6,8 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 
 app.secret_key = "Secret Key"
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://pvyjcmwrytnrho:bd8af00d8230687db210eeb7cc6dde5333d66d7c0817c447e78a0701e32d8530@ec2-23-20-140-229.compute-1.amazonaws.com:5432/d1cdo565mmcu59"
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///muscle_up.db"
+# app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://pvyjcmwrytnrho:bd8af00d8230687db210eeb7cc6dde5333d66d7c0817c447e78a0701e32d8530@ec2-23-20-140-229.compute-1.amazonaws.com:5432/d1cdo565mmcu59"
 app.config['SQLALCHEMY_TRACK-MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -274,7 +275,8 @@ def expiry_table():
     today = datetime.datetime.now().date()
     expire = today + datetime.timedelta(days=2)
     # member = Members.query.filter(Members.enddate <= expire).all()
-    total_rows = Members.query.filter(Members.enddate <= str(expire)).count()
+    total_rows = Members.query.filter(Members.enddate <= expire).count()
+
     member = Members.query.filter(Members.enddate <= expire).order_by(Members.enddate.desc()).all()
     return render_template('expiryTable.html', member=member, total_rows=total_rows)
 
