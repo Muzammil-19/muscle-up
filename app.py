@@ -41,9 +41,12 @@ def login():
                     session["username"] = data.username
                     return redirect("/")
                 else:
-                    flash("invalid username/password")
+                    flash("Invalid password")
                     return redirect("/login")
         return render_template("login.html")
+    except AttributeError:
+        flash("Invalid username and password")
+        return redirect("/login")
     except:
         return make_response("Something went wrong. Call Developer!")
 
