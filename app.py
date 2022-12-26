@@ -68,7 +68,9 @@ def index():
         if "username" not in session:
             # flash("Please log in")
             return render_template("login.html")
-        return render_template("index.html")
+        today = datetime.datetime.now().date()
+        members = Members.query.filter(Members.enddate == today)
+        return render_template("index.html",members=members)
     except:
         return make_response("Something went wrong. Call Developer!")
 
